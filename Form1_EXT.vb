@@ -11,7 +11,7 @@ Partial Public Class Form1
             Try
                 FileName = My.Application.CommandLineArgs(1) & "\" & TextBox9.Text
                 OverWorld = FileName & "-0.PNG"
-                UnderWorld = FileName & "-0.PNG"
+                UnderWorld = FileName & "-1.PNG"
                 LoadLevel(My.Application.CommandLineArgs(0))
                 Form2?.P?.Image?.Save(OverWorld, Imaging.ImageFormat.Png)
                 Form3?.P?.Image?.Save(UnderWorld, Imaging.ImageFormat.Png)
