@@ -79,6 +79,7 @@ Public Class Form1
 
     End Sub
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        RefPic()
         Form2.Show()
     End Sub
     Dim B As Bitmap
@@ -3100,13 +3101,17 @@ Err:
         MsgBox("已保存地图至" & PT & "\" & TextBox9.Text)
     End Sub
     Private Sub RefPic()
+        If Not File.Exists(TextBox1.Text) Then
+            Label2.Text += $"File {TextBox1.Text} does not exist. Press Load Level and try again."
+            Return
+        End If
         Form2.P.Left = 0
         Form2.P.Top = 0
 
         ListBox1.Items.Clear()
         ListBox2.Items.Clear()
         NowIO = 0
-        LoadEFile(True)
+        LoadEFileEnglish(True)
         MapWidth(0) = MapHdr.BorR \ 16
         MapHeight(0) = MapHdr.BorT \ 16
         Dim DN As String = IIf(MapHdr.Flag = 2, "A", "")
@@ -3124,7 +3129,7 @@ Err:
         NowIO = 1
         Form3.P.Left = 0
         Form3.P.Top = 0
-        LoadEFile(False)
+        LoadEFileEnglish(False)
         MapWidth(1) = MapHdr.BorR \ 16
         MapHeight(1) = MapHdr.BorT \ 16
         DN = IIf(MapHdr.Flag = 2, "A", "")
@@ -3143,68 +3148,7 @@ Err:
 (ByVal pCaller As Integer, ByVal szURL As String, ByVal szFileName As String, ByVal dwReserved As Integer, ByVal lpfnCB As Integer) As Integer
     Dim isMapIO As Boolean = True
     Private Sub Button5_Click(sender As Object, e As EventArgs) Handles Button5.Click
-        Dim I As Integer
-        TextBox9.Text = TextBox9.Text.Replace("-", "")
-        TextBox9.Text = TextBox9.Text.Replace(" ", "")
-        TextBox9.Text = Strings.Left(TextBox9.Text, 9)
-        'Button2.Enabled = False
-        'Button8.Enabled = False
-        Label2.Text = "马里奥制造2关卡机器人 v010"
-        Label2.Text += vbCrLf & DateTime.Now.ToString & " 加载地图(L00)"
-        If TextBox9.Text.Length = 9 Then
-            If IO.File.Exists(PT & "\MAP\" & TextBox9.Text) Then
-                '存在解密文件
-                Label2.Text += vbCrLf & DateTime.Now.ToString & " 已加载地图(L01)"
-                TextBox1.Text = PT & "\MAP\" & TextBox9.Text
-                'Button2.Enabled = True
-                'Button8.Enabled = True
-                isMapIO = True
-                RefPic()
-
-
-            ElseIf IO.File.Exists(PT & "\MAP\" & TextBox9.Text & ".DAT") Then
-                '存在地图文件
-                Label2.Text += vbCrLf & DateTime.Now.ToString & " 解析地图(L02)"
-                DeMap(TextBox9.Text & ".DAT", TextBox9.Text)
-                Threading.Thread.Sleep(3000)
-                Label2.Text += vbCrLf & DateTime.Now.ToString & " 已加载地图(L03)"
-                TextBox1.Text = PT & "\MAP\" & TextBox9.Text
-                'Button2.Enabled = True
-                'Button8.Enabled = True
-                isMapIO = True
-                RefPic()
-
-            Else
-                Label2.Text += vbCrLf & DateTime.Now.ToString & " 从服务器加载地图(L04)"
-                Call URLDownloadToFile(0, UR2 & TextBox9.Text, PT & "\MAP\" & TextBox9.Text & ".DAT", 0, 0)
-                Do
-                    If IO.File.Exists(PT & "\MAP\" & TextBox9.Text & ".DAT") Then
-                        DeMap(TextBox9.Text & ".DAT", TextBox9.Text)
-                        I = 0
-                        Do
-                            I += 1
-                            Label2.Text += vbCrLf & DateTime.Now.ToString & " 解析地图(L05)"
-                            Threading.Thread.Sleep(1000)
-                            If IO.File.Exists(PT & "\MAP\" & TextBox9.Text) Then
-                                Exit Do
-                            End If
-                        Loop Until I > 10
-                        Label2.Text += vbCrLf & DateTime.Now.ToString & " 已加载地图(L06)"
-                        TextBox1.Text = PT & "\MAP\" & TextBox9.Text
-                        isMapIO = True
-                        RefPic()
-                        Exit Sub
-                    Else
-                        I += 1
-                        Threading.Thread.Sleep(1000)
-                    End If
-                Loop Until I > 5
-                Label2.Text += vbCrLf & DateTime.Now.ToString & " 加载地图超时(Error01)"
-            End If
-        Else
-            Label2.Text += vbCrLf & DateTime.Now.ToString & " 图号错误(Error02)"
-        End If
-
+        LoadLevel(TextBox9.Text)
     End Sub
     Public Sub DeMap(P1 As String, P2 As String)
         Dim info As System.Diagnostics.ProcessStartInfo
@@ -3231,7 +3175,8 @@ Err:
         Form3.Show()
     End Sub
     Private Sub TrackBar1_Scroll(sender As Object, e As EventArgs) Handles TrackBar1.Scroll
-        Label1.Text = "缩放Zoom:" & 2 ^ TrackBar1.Value
+        Label1.Text = "Zoom:" & 2 ^ TrackBar1.Value
+        Zm = 2 ^ TrackBar1.Value
     End Sub
     Private Sub Button9_Click(sender As Object, e As EventArgs) 
         FileCopy("D:\yuzu-windows-msvc-20200531-5ead55df7\user\save\0000000000000000\6D74F859658CF0E9DC9DD5D96A655C71\01009B90006DC000\course_data_000.BCD",
@@ -3577,7 +3522,7 @@ Err:
     End Function
     Private Sub PictureBox1_Click(sender As Object, e As EventArgs) 
         On Error Resume Next
-        PictureBox1.Image.Save("E:\OBS录像\极难团\" & Strings.Left(TextBox9.Text, 9) & ".PNG")
+        'PictureBox1.Image.Save("E:\OBS录像\极难团\" & Strings.Left(TextBox9.Text, 9) & ".PNG")
         Me.Text = "已保存"
     End Sub
     Dim G0 As Graphics, B0 As New Bitmap（300, 30）
@@ -3634,7 +3579,7 @@ Err:
         TrackYPt(15, 0) = New Point(2, 0)
         TrackYPt(15, 1) = New Point(0, 4)
         TrackYPt(15, 2) = New Point(4, 4)
-
+        CommandLineSupport()
     End Sub
     Public Sub SetTileLoc()
         '4,4A 5 6 8 8A 21 22 23 23A 29 43 49 63 79 79A 92 99 100 100A
@@ -3859,7 +3804,7 @@ Err:
     Function GetStrW(s As String) As Single
         Dim B As New Bitmap(300, 100)
         Dim G As Graphics = Graphics.FromImage(B), SZ As SizeF
-        SZ = G.MeasureString(s, Button11.Font)
+        SZ = G.MeasureString(s, Button1.Font)
         GetStrW = SZ.Width
     End Function
 

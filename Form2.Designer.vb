@@ -31,18 +31,23 @@ Partial Class Form2
         'P
         '
         Me.P.Location = New System.Drawing.Point(0, 0)
+        Me.P.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.P.Name = "P"
-        Me.P.Size = New System.Drawing.Size(100, 100)
+        Me.P.Size = New System.Drawing.Size(133, 133)
         Me.P.TabIndex = 0
         Me.P.TabStop = False
         '
+        'ToolTip1
+        '
+        '
         'Form2
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(784, 441)
+        Me.ClientSize = New System.Drawing.Size(1045, 588)
         Me.Controls.Add(Me.P)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow
+        Me.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.Name = "Form2"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "表世界"

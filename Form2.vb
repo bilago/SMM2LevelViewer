@@ -31,6 +31,23 @@ Public Class Form2
             CY0 = CY
         End If
     End Sub
+
+    Private Sub Form2_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        CX = 0
+        CY = 0
+        CX0 = 0
+        CY0 = 0
+        P.Refresh()
+    End Sub
+
+    Private Sub Form2_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        CX = 0
+        CY = 0
+        CX0 = 0
+        CY0 = 0
+        P.Refresh()
+    End Sub
+
     Protected Overrides Sub OnLoad(e As EventArgs)
         MyBase.OnLoad(e)
         ToolTip1.OwnerDraw = True

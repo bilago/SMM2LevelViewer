@@ -229,7 +229,6 @@
     Public Sub LoadLvlData(P As String, IO As Boolean)
         Dim Offset As Integer
         Offset = IIf(IO, &H201, &H2E0E1)
-
         FileOpen(1, P, OpenMode.Binary)
         FileGet(1, LH.StartY, &H0 + 1)
         FileGet(1, LH.GoalY, &H1 + 1)
